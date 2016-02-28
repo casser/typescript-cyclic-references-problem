@@ -1,4 +1,4 @@
-This question is related to TypeScript, ES6, SystemJs and ReflectJs specs, but I would like to know you thoughts about it. 
+This question is related to TypeScript, ES6, SystemJs and ReflectJs specs, but I would like to know your thoughts about it. 
 
 So for a function declarations the sequence of code is not important, but for classes it is: 
 
@@ -38,9 +38,9 @@ console.info(One.two)
 console.info(Two.one)
 
 ```
-so this is throwing error when trying to create One instace 
+so this is throwing error when trying to create `One` instace, the expectation is to have `One` declared at the time of exection .
 
-this can be hacked by using some cached getters, which can be somehow used to solve the main problem in runtime/loader :
+This can be hacked by using some cached getters, which can be somehow used to solve the main problem in runtime(loader) :
 
 ```ts
 // cached.ts
@@ -90,6 +90,7 @@ I have prepared some demo to show hack on this problem, you can see bellow
 [Throws a `TypeError` because of undeclared class](http://localhost:63342/test-typescript/cyclic-problem.html)
 
 ### Example of cyclic references problem in decoration phase
+
 The other example is [annotators cyclic references problem](http://localhost:63342/test-typescript/cyclic-problem.html).
 
 ```ts
@@ -123,11 +124,12 @@ export class Project {
 export class Projects extends Array<Project>{}
 ```
 
-I think this is *important* because frameworks like `Dependecy Injection (java guice)`, `ORM's` or `Serialization` frameworks will use this feature deeply, and user code should contain at least cross referenced types.
+I think this is **IMPORTANT** because `Dependecy Injection (java guice)`, `ORM's` or `Serialization` frameworks will use this feature deeply, and user code can contain *cross referenced types*.
 
 So the main reason for this problem is that declaration, decoration and execution phases of classes mixed in output. 
 
 ```js
+// decoration inside execution block and part of class declaration 
 __decorate([
     Field, 
     __metadata('design:type', Projects)
@@ -144,7 +146,9 @@ __decorate([
 ```
 
 which can be adjusted after module execution, but I think this is just a hack, and the right way will be finnaly define 
-specification about *Loading, Declaration, Annotation, Decoration and Execution* phases of runtime which will support cyclic references. 
+specification about *Loading > Declaration > Annotation > Decoration and Execution* phases of runtime which will support cyclic references. 
+
+Any thoughts ?  
 
 
 PS: AND AGAIN THANKS FOR `TYPESCRIPT` :)
