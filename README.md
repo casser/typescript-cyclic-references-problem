@@ -90,7 +90,7 @@ I have prepared some demo to show hack on this problem, you can see bellow
 [Throws a `TypeError` because of undeclared class](http://localhost:63342/test-typescript/cyclic-problem.html)
 
 ### Example of cyclic references problem in decoration phase
-The other important example is annotators cyclic references problem.
+The other example is [annotators cyclic references problem](http://localhost:63342/test-typescript/cyclic-problem.html).
 
 ```ts
 function Model(target){}
@@ -122,3 +122,41 @@ export class Project {
 @Collection
 export class Projects extends Array<Project>{}
 ```
+
+I think this is *important* because frameworks like `Dependecy Injection (java guice)`, `ORM's` or `Serialization` frameworks will use this feature deeply, and user code should contain at least cross referenced types.
+
+So the main reason for this problem is that declaration, decoration and execution phases of classes mixed in output. 
+
+```js
+__decorate([
+    Field, 
+    __metadata('design:type', Projects)
+], User.prototype, "projects", void 0);
+```
+
+Potencial hack for this can be generate closure instead of direct type referance in metadata like:
+
+```js
+__decorate([
+    Field, 
+    __metadata('design:type', function(){return Projects})
+], User.prototype, "projects", void 0);
+```
+
+which can be adjusted after module execution, but I think this is just a hack, and the right way will be finnaly define 
+specification about *Loading, Declaration, Annotation, Decoration and Execution* phases of runtime which will support cyclic references. 
+
+
+PS: AND AGAIN THANKS FOR `TYPESCRIPT` :)
+
+
+
+
+
+
+
+
+
+
+
+
